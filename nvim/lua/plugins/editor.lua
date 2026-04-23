@@ -84,7 +84,9 @@ return {
 						grouped = true,
 						previewer = false,
 						initial_mode = "normal",
-						layout_config = { height = 40 },
+						sorting_strategy = "ascending",
+						layout_strategy = "horizontal",
+						layout_config = { height = 40, prompt_position = "top" },
 					})
 				end,
 				desc = "Open File Browser with the path of the current buffer",
@@ -99,7 +101,7 @@ return {
 				wrap_results = true,
 				layout_strategy = "horizontal",
 				layout_config = { prompt_position = "top" },
-				sorting_strategy = "ascending",
+				sorting_strategy = "descending",
 				winblend = 0,
 				mappings = {
 					n = {},
@@ -116,9 +118,11 @@ return {
 			}
 			opts.extensions = {
 				file_browser = {
-					theme = "dropdown",
 					-- disables netrw and use telescope-file-browser in its place
 					hijack_netrw = true,
+					sorting_strategy = "ascending",
+					layout_strategy = "horizontal",
+					layout_config = { prompt_position = "top" },
 					mappings = {
 						-- your custom insert mode mappings
 						["n"] = {

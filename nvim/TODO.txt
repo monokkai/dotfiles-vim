@@ -1,6 +1,0 @@
-1) fix tmux config to show correctly because now its such a mess with something default
-2) when i press s + f it opens menu with files and it opens and shows files from bottom to top!
-i need from top to bottom as its always!
-3) implement rust, go and swift language full support
-4) install suggestions in code when language that im using will show me methods, types and etc!
-5) autosave

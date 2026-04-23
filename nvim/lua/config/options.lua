@@ -34,13 +34,4 @@ vim.opt.mouse = ""
 -- Add asterisks in block comments
 vim.opt.formatoptions:append({ "r" })
 
--- Auto save on focus lost and buffer leave
-vim.opt.autowrite = true
-vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave", "InsertLeave" }, {
-	pattern = "*",
-	callback = function()
-		if vim.bo.modified and not vim.bo.readonly and vim.fn.expand("%") ~= "" and vim.bo.buftype == "" then
-			vim.cmd("silent! write")
-		end
-	end,
-})
+vim.opt.list = false
