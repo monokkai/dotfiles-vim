@@ -1,0 +1,21 @@
+# Fish only inside Ghostty; system/Terminal.app still follow $SHELL (e.g. zsh).
+# Intel Homebrew: use /usr/local/bin/fish instead.
+command = /opt/homebrew/bin/fish
+shell-integration = fish
+
+font-size = 23
+
+background-opacity = 0.8
+background-blur-radius = 20
+background = #000000
+
+font-family = "PlemolJP Console NF"
+
+cursor-style = block
+cursor-style-blink = true
+
+#keybind = global:cmd+ctrl+shift+j=toggle_visibility
+
+macos-option-as-alt = left
+keybind = alt+left=unbind
+keybind = alt+right=unbind

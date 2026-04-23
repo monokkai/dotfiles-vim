@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Read(//Users/mayeregor/.tmux/**)",
+      "Read(//Users/mayeregor/.tmux/plugins/**)",
+      "Bash(git clone *)"
+    ]
+  }
+}
