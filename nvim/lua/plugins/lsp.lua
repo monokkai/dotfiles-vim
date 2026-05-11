@@ -1,9 +1,11 @@
 return {
 	-- tools
 	{
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
 		opts = function(_, opts)
 			vim.list_extend(opts.ensure_installed, {
+				"stylua",
+				"selene",
 				"luacheck",
 				"shellcheck",
 				"shfmt",
@@ -18,7 +20,7 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		opts = {
-			inlay_hints = { enabled = true },
+			inlay_hints = { enabled = false },
 			---@type lspconfig.options
 			servers = {
 				cssls = {},
@@ -58,6 +60,13 @@ return {
 					},
 				},
 				html = {},
+				yamlls = {
+					settings = {
+						yaml = {
+							keyOrdering = false,
+						},
+					},
+				},
 				lua_ls = {
 					-- enabled = false,
 					single_file_support = true,
@@ -128,10 +137,22 @@ return {
 		},
 	},
 	{
-		"nvim-cmp",
-		dependencies = { "hrsh7th/cmp-emoji" },
-		opts = function(_, opts)
-			table.insert(opts.sources, { name = "emoji" })
-		end,
+		"neovim/nvim-lspconfig",
+		opts = {
+			servers = {
+				["*"] = {
+					keys = {
+						{
+							"gd",
+							function()
+								require("telescope.builtin").lsp_definitions({ reuse_win = false })
+							end,
+							desc = "Goto Definition",
+							has = "definition",
+						},
+					},
+				},
+			},
+		},
 	},
 }

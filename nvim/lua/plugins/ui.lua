@@ -1,56 +1,4 @@
 return {
-	{
-		"nvimdev/dashboard-nvim",
-		enabled = false,
-	},
-	-- disable snacks.indent — crashes with nvim_win_get_cursor on invalid window
-	{
-		"folke/snacks.nvim",
-		opts = {
-			indent = { enabled = false },
-		},
-	},
-	{
-		"nvim-lualine/lualine.nvim",
-		enabled = true,
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		event = "VeryLazy",
-		opts = {
-			options = {
-				theme = "sonokai",
-				component_separators = { left = "", right = "" },
-				section_separators = { left = "", right = "" },
-				globalstatus = true,
-				disabled_filetypes = { statusline = { "dashboard", "NvimTree" } },
-			},
-			sections = {
-				lualine_a = { "mode" },
-				lualine_b = {
-					{ "branch" },
-					{ "diff", symbols = { added = " ", modified = " ", removed = " " } },
-					{ "diagnostics", symbols = { error = " ", warn = " ", info = " ", hint = " " } },
-				},
-				lualine_c = {
-					{ "filename", path = 1, symbols = { modified = " ●", readonly = " ", unnamed = "[No Name]" } },
-				},
-				lualine_x = {
-					{ "encoding" },
-					{ "fileformat" },
-					{ "filetype" },
-				},
-				lualine_y = { { "progress" } },
-				lualine_z = { "location" },
-			},
-			inactive_sections = {
-				lualine_a = {},
-				lualine_b = {},
-				lualine_c = { "filename" },
-				lualine_x = { "location" },
-				lualine_y = {},
-				lualine_z = {},
-			},
-		},
-	},
 	-- messages, cmdline and the popupmenu
 	{
 		"folke/noice.nvim",
@@ -92,6 +40,15 @@ return {
 				},
 			}
 
+			vim.api.nvim_create_autocmd("FileType", {
+				pattern = "markdown",
+				callback = function(event)
+					vim.schedule(function()
+						require("noice.text.markdown").keys(event.buf)
+					end)
+				end,
+			})
+
 			opts.presets.lsp_doc_border = true
 		end,
 	},
@@ -100,9 +57,20 @@ return {
 		"rcarriga/nvim-notify",
 		opts = {
 			timeout = 5000,
-			background_colour = "#000000",
-			render = "wrapped-compact",
 		},
+	},
+
+	{
+		"snacks.nvim",
+		opts = {
+			scroll = { enabled = false },
+			styles = {
+				lazygit = {
+					wo = { winblend = 10 },
+				},
+			},
+		},
+		keys = {},
 	},
 
 	-- buffer line
@@ -119,138 +87,95 @@ return {
 				show_buffer_close_icons = false,
 				show_close_icon = false,
 			},
+			highlights = {
+				tab_selected = { fg = "#000000", bg = "#D4A017", bold = true },
+				buffer_selected = { fg = "#000000", bg = "#D4A017", bold = true },
+				indicator_selected = { fg = "#D4A017", bg = "#D4A017" },
+				warning_selected = { fg = "#000000", bg = "#D4A017" },
+				warning_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
+				error_selected = { fg = "#000000", bg = "#D4A017" },
+				error_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
+				info_selected = { fg = "#000000", bg = "#D4A017" },
+				info_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
+				hint_selected = { fg = "#000000", bg = "#D4A017" },
+				hint_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
+			},
 		},
 	},
 
 	-- filename
 	{
 		"b0o/incline.nvim",
-		dependencies = {},
+		dependencies = { "craftzdog/solarized-osaka.nvim" },
 		event = "BufReadPre",
 		priority = 1200,
 		config = function()
-			local helpers = require("incline.helpers")
+			local colors = require("solarized-osaka.colors").setup()
 			require("incline").setup({
-				window = {
-					padding = 0,
-					margin = { horizontal = 0 },
+				highlight = {
+					groups = {
+						InclineNormal = { guibg = colors.magenta500, guifg = colors.base04 },
+						InclineNormalNC = { guifg = colors.violet500, guibg = colors.base03 },
+					},
+				},
+				window = { margin = { vertical = 0, horizontal = 1 } },
+				hide = {
+					cursorline = true,
 				},
 				render = function(props)
 					local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-					local ft_icon, ft_color = require("nvim-web-devicons").get_icon_color(filename)
-					local modified = vim.bo[props.buf].modified
-					local buffer = {
-						ft_icon and { " ", ft_icon, " ", guibg = ft_color, guifg = helpers.contrast_color(ft_color) }
-							or "",
-						" ",
-						{ filename, gui = modified and "bold,italic" or "bold" },
-						" ",
-						guibg = "#363944",
-					}
-					return buffer
-				end,
-			})
-		end,
-	},
-	-- LazyGit integration with Telescope
-	{
-		"kdheepak/lazygit.nvim",
-		keys = {
-			{
-				";c",
-				":LazyGit<Return>",
-				silent = true,
-				noremap = true,
-			},
-		},
-		-- optional for floating window border decoration
-		dependencies = {
-			"nvim-lua/plenary.nvim",
-		},
-	},
-	{
-		"kristijanhusak/vim-dadbod-ui",
-		dependencies = {
-			{ "tpope/vim-dadbod", lazy = true },
-			{ "kristijanhusak/vim-dadbod-completion", ft = { "sql", "mysql", "plsql" }, lazy = true },
-		},
-		cmd = {
-			"DBUI",
-			"DBUIToggle",
-			"DBUIAddConnection",
-			"DBUIFindBuffer",
-		},
-		init = function()
-			-- Your DBUI configuration
-			vim.g.db_ui_use_nerd_fonts = 1
-		end,
-		keys = {
-			{
-
-				"<leader>d",
-				"<cmd>NvimTreeClose<cr><cmd>tabnew<cr><bar><bar><cmd>DBUI<cr>",
-			},
-		},
-	},
-	{
-		"nvim-tree/nvim-tree.lua",
-		config = function()
-			require("nvim-tree").setup({
-				on_attach = function(bufnr)
-					local api = require("nvim-tree.api")
-
-					local function opts(desc)
-						return {
-							desc = "nvim-tree: " .. desc,
-							buffer = bufnr,
-							noremap = true,
-							silent = true,
-							nowait = true,
-						}
+					if vim.bo[props.buf].modified then
+						filename = "[+] " .. filename
 					end
 
-					-- default mappings
-					api.config.mappings.default_on_attach(bufnr)
-
-					-- custom mappings
-					vim.keymap.set("n", "t", api.node.open.tab, opts("Tab"))
+					local icon, color = require("nvim-web-devicons").get_icon_color(filename)
+					return { { icon, guifg = color }, { " " }, { filename } }
 				end,
-				actions = {
-					open_file = {
-						quit_on_open = true,
-					},
-				},
-				sort = {
-					sorter = "case_sensitive",
-				},
-				view = {
-					width = 30,
-					relativenumber = true,
-				},
-				renderer = {
-					group_empty = true,
-				},
-				filters = {
-					dotfiles = true,
-					custom = {
-						"node_modules/.*",
-					},
-				},
-				log = {
-					enable = true,
-					truncate = true,
-					types = {
-						diagnostics = true,
-						git = true,
-						profile = true,
-						watcher = true,
-					},
-				},
 			})
-
-			if vim.fn.argc(-1) == 0 then
-				vim.cmd("NvimTreeFocus")
-			end
 		end,
+	},
+
+	-- statusline
+	{
+		"nvim-lualine/lualine.nvim",
+		opts = function(_, opts)
+			local LazyVim = require("lazyvim.util")
+			opts.sections.lualine_c[4] = {
+				LazyVim.lualine.pretty_path({
+					length = 0,
+					relative = "cwd",
+					modified_hl = "MatchParen",
+					directory_hl = "",
+					filename_hl = "Bold",
+					modified_sign = "",
+					readonly_icon = " 󰌾 ",
+				}),
+			}
+		end,
+	},
+
+	{
+		"folke/zen-mode.nvim",
+		cmd = "ZenMode",
+		opts = {
+			plugins = {
+				gitsigns = true,
+				tmux = true,
+				kitty = { enabled = false, font = "+2" },
+			},
+		},
+		keys = { { "<leader>z", "<cmd>ZenMode<cr>", desc = "Zen Mode" } },
+	},
+
+	{
+		"MeanderingProgrammer/render-markdown.nvim",
+		enabled = false,
+	},
+
+	{
+		"folke/snacks.nvim",
+		opts = {
+			dashboard = { enabled = false },
+		},
 	},
 }
