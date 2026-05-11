@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(keybindings-help)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebSearch",
+      "Bash(curl -sL https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/master/queries/vim/highlights.scm)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:robinthrift.com)",
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:www.lazyvim.org)",
+      "Read(//Users/mayeregor/.config/tmux/**)",
+      "Read(//Users/mayeregor/**)",
+      "Bash(python3 *)"
+    ]
+  }
+}
