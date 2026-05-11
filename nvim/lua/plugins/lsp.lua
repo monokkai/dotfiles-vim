@@ -12,6 +12,9 @@ return {
 				"tailwindcss-language-server",
 				"typescript-language-server",
 				"css-lsp",
+				-- Go
+				"gofumpt",
+				"goimports",
 			})
 		end,
 	},
