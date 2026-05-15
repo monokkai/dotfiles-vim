@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.nushell.sh)",
+      "WebFetch(domain:starship.rs)",
+      "WebFetch(domain:raw.githubusercontent.com)"
+    ]
+  }
+}
