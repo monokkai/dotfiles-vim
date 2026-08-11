@@ -5,7 +5,8 @@
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.nushell.sh)",
       "WebFetch(domain:starship.rs)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(nvim --headless \"+lua vim.defer_fn\\(function\\(\\) print\\('COLORSCHEME=' .. \\(vim.g.colors_name or 'nil'\\)\\); vim.cmd\\('qa!'\\) end, 3000\\)\")"
     ]
   }
 }
