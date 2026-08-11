@@ -89,11 +89,23 @@ return {
 				show_close_icon = false,
 			},
 			highlights = {
-				-- slant glyphs: fg is the tab body, bg is the surrounding fill
-				separator_selected = { fg = "#D4A017", bg = "NONE" },
-				separator_visible = { fg = "#002B36", bg = "NONE" },
-				separator = { fg = "#002B36", bg = "NONE" },
+				-- A slant glyph is one filled diagonal: fg paints the half facing the
+				-- tab, bg the half facing the bar. Both halves must be named --
+				-- fg = "NONE" inherits base01 and gives a two-tone wedge.
+				-- Bar colour is base03; the selected wedge carries the amber across
+				-- so the pill runs solid into its points.
+				fill = { fg = "#002C38", bg = "#002C38" },
+				separator_selected = { fg = "#002C38", bg = "#D4A017" },
+				separator_visible = { fg = "#002C38", bg = "#002C38" },
+				separator = { fg = "#002C38", bg = "#002C38" },
+				tab = { fg = "#576D74", bg = "#002C38" },
+				background = { fg = "#576D74", bg = "#002C38" },
 				tab_selected = { fg = "#000000", bg = "#D4A017", bold = true },
+				-- the modified dot has its own group; without these it keeps the
+				-- theme bg and shows a teal patch on the amber tab
+				modified_selected = { fg = "#000000", bg = "#D4A017" },
+				modified = { fg = "#576D74", bg = "#002C38" },
+				modified_visible = { fg = "#576D74", bg = "#002C38" },
 				buffer_selected = { fg = "#000000", bg = "#D4A017", bold = true },
 				indicator_selected = { fg = "#D4A017", bg = "#D4A017" },
 				warning_selected = { fg = "#000000", bg = "#D4A017" },

@@ -7,7 +7,31 @@
       "WebFetch(domain:starship.rs)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(nvim --headless \"+lua vim.defer_fn\\(function\\(\\) print\\('COLORSCHEME=' .. \\(vim.g.colors_name or 'nil'\\)\\); vim.cmd\\('qa!'\\) end, 3000\\)\")",
-      "Bash(nvim --headless '+lua vim.defer_fn\\(function\\(\\) *)"
+      "Bash(nvim --headless '+lua vim.defer_fn\\(function\\(\\) *)",
+      "Bash(nvim --headless '+lua *)",
+      "Bash(nvim --headless /private/tmp/claude-501/-Users-mayeregor--config-nvim/d5cea433-b025-41d1-b730-e161b3e6d2af/scratchpad/probe.tsx '+lua *)",
+      "Bash(nvim --headless /private/tmp/claude-501/-Users-mayeregor--config-nvim/d5cea433-b025-41d1-b730-e161b3e6d2af/scratchpad/probe2.tsx '+lua *)",
+      "Bash(nvim --headless \"+Lazy! sync\" +qa)",
+      "Bash(nvim --headless \"+TSUpdateSync tsx typescript javascript\" +qa)",
+      "Bash(nvim --headless \"+lua require\\('lazy'\\).load\\({plugins={'nvim-treesitter'}}\\)\" \"+TSUpdateSync tsx typescript javascript\" +qa)",
+      "Bash(nvim --headless \"+lua vim.defer_fn\\(function\\(\\) vim.cmd\\('qa!'\\) end, 3000\\)\")",
+      "Bash(nvim --headless \"/private/tmp/claude-501/-Users-mayeregor--config-nvim/d5cea433-b025-41d1-b730-e161b3e6d2af/scratchpad/probe2.tsx\" \"+lua vim.defer_fn\\(function\\(\\) vim.cmd\\('qa!'\\) end, 4000\\)\")",
+      "Bash(nvim --headless \"+lua vim.defer_fn\\(function\\(\\) vim.cmd\\('qa!'\\) end, 4000\\)\")",
+      "Bash(nvim --headless /private/tmp/claude-501/-Users-mayeregor--config-nvim/d5cea433-b025-41d1-b730-e161b3e6d2af/scratchpad/footer.tsx '+lua *)",
+      "Bash(/opt/homebrew/bin/fish -c 'for v in fish_color_command fish_color_param fish_color_normal fish_color_autosuggestion fish_color_quote fish_color_error fish_color_redirection fish_color_operator fish_color_comment fish_color_end; echo \"$v = $$v\"; end')",
+      "Bash(/opt/homebrew/bin/fish -c 'set -S tide_left_prompt_items; set -S tide_right_prompt_items')",
+      "Bash(/opt/homebrew/bin/fish --version)",
+      "Bash(git -C /Users/mayeregor/.config status --short -- fish/)",
+      "Bash(cp /Users/mayeregor/.config/fish/config.fish /Users/mayeregor/.config/fish/config.fish.bak)",
+      "Bash(mkdir -p /Users/mayeregor/.config/fish/categories)",
+      "Bash(/opt/homebrew/bin/fish -l -c 'echo \"--- colors now live ---\"; for v in fish_color_command fish_color_param fish_color_quote fish_color_normal fish_color_comment fish_color_error fish_color_autosuggestion; echo \"$v = $$v\"; end; echo \"--- scope check ---\"; set -qU fish_color_command; and echo \"STILL UNIVERSAL \\(bad\\)\"; or echo \"universal cleared \\(good\\)\"')",
+      "Bash(/opt/homebrew/bin/fish -l -c 'echo \"aliases: $\\(functions -n | tr \" \" \"\\\\n\" | grep -cE \"^\\(ll|gs|gl|lg|n|g\\)$\"\\)\"; echo \"EDITOR=$EDITOR\"; echo \"PATH_head=$PATH[1]\"; echo \"greeting=[$fish_greeting]\"; type -q eza && echo \"eza ok\"; functions -q ll && echo \"ll defined\"')",
+      "Bash(/opt/homebrew/bin/fish -l -c 'echo \"EDITOR=$EDITOR\"; echo \"greeting=[$fish_greeting]\"; echo \"GOPATH=$GOPATH\"; for a in ll ls l la n g gs gl gd gp ga lg tn c kb tf m; functions -q $a; or echo \"MISSING: $a\"; end; echo \"alias check done\"')",
+      "Bash(/opt/homebrew/bin/fish -l -c 'echo \"brew_in_path:\"; contains /opt/homebrew/bin $PATH; and echo yes; or echo NO; echo \"tide loaded:\"; functions -q fish_prompt; and echo yes; or echo NO; echo \"thefuck:\"; functions -q fuck; and echo yes; or echo \"not installed\"; echo \"startup errors: none if silent above\"')",
+      "Bash(/opt/homebrew/bin/fish -c 'for v in tide_pwd_dir_length tide_pwd_truncate_dirs fish_prompt_pwd_dir_length tide_pwd_icon tide_pwd_icon_home; echo \"$v = $$v\"; end')",
+      "Bash(/opt/homebrew/bin/fish -c 'set -U tide_pwd_dir_length 3; echo \"set to: $tide_pwd_dir_length\"')",
+      "Bash(/opt/homebrew/bin/fish -c 'set -e tide_pwd_dir_length; set -e tide_pwd_max_dirs; echo cleared')",
+      "Bash(/opt/homebrew/bin/fish -c 'echo \"tide_pwd_markers = $tide_pwd_markers\"')"
     ]
   }
 }

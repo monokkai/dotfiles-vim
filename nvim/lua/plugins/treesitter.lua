@@ -3,9 +3,21 @@ return {
 
 	{
 		"nvim-treesitter/nvim-treesitter",
+		-- Pin to master. The `main` branch ships no highlight queries and has no
+		-- nvim-treesitter.configs module, which leaves JSX tags/keywords uncoloured
+		-- and makes the config below error out. `pin` stops :Lazy sync/update from
+		-- re-resolving back to main and rewriting lazy-lock.json.
+		branch = "master",
+		commit = "cf12346a3414fa1b06af75c79faebe7f76df080a",
+		pin = true,
 		build = ":TSUpdate",
 		opts = {
+			highlight = { enable = true },
+			indent = { enable = true },
 			ensure_installed = {
+				"tsx",
+				"typescript",
+				"javascript",
 				"astro",
 				"cmake",
 				"cpp",
@@ -54,8 +66,7 @@ return {
 			},
 		},
 		config = function(_, opts)
-			local TS = require("nvim-treesitter")
-			TS.setup(opts)
+			require("nvim-treesitter.configs").setup(opts)
 
 			-- MDX
 			vim.filetype.add({

@@ -1,13 +1,11 @@
-theme = "Solarized Dark - Patched"
-
-background-opacity = 0.83
-background-blur-radius = 20
+background-opacity = 0.85
+background-blur-radius = 25
 background = #000000
 
-font-family = "IBM Plex Mono"
+font-family = "PlemolJP Console NF"
 command = /opt/homebrew/bin/fish
 shell-integration = fish
-font-size = 20
+font-size = 19
 
 cursor-style = block
 cursor-style-blink = true
