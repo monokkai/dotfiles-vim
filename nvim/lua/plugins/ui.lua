@@ -84,10 +84,15 @@ return {
 		opts = {
 			options = {
 				mode = "tabs",
+				separator_style = "slant",
 				show_buffer_close_icons = false,
 				show_close_icon = false,
 			},
 			highlights = {
+				-- slant glyphs: fg is the tab body, bg is the surrounding fill
+				separator_selected = { fg = "#D4A017", bg = "NONE" },
+				separator_visible = { fg = "#002B36", bg = "NONE" },
+				separator = { fg = "#002B36", bg = "NONE" },
 				tab_selected = { fg = "#000000", bg = "#D4A017", bold = true },
 				buffer_selected = { fg = "#000000", bg = "#D4A017", bold = true },
 				indicator_selected = { fg = "#D4A017", bg = "#D4A017" },
