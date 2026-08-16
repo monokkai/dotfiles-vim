@@ -40,6 +40,10 @@ local jsx_white = "#E8E8E8" -- text between tags
 -- Same hue as the originally requested #24486E, raised to a readable lightness
 -- (2.00:1 -> 5.55:1 against the background).
 local jsx_attr = "#588FC8"
+-- `import` / `from` keywords. Requested as #7E3F2E, which measures 2.37:1
+-- against the background; this is the same hue (13deg) at 5.08:1.
+-- Swap to "#7E3F2E" for the literal value.
+local jsx_import_kw = "#C26E57"
 
 vim.api.nvim_create_autocmd("ColorScheme", {
 	group = vim.api.nvim_create_augroup("jsx_markup_colors", { clear = true }),
@@ -90,16 +94,13 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 			hl(g, jsx_white)
 		end
 
-		-- Imported names and their { } braces, in the same red as the JSX
-		-- brackets. These captures come from after/queries/{tsx,typescript,
-		-- javascript}/highlights.scm, which scopes them to import statements --
-		-- colouring @variable or @punctuation.bracket directly would repaint
-		-- every identifier and bracket in the file.
-		for _, g in ipairs({ "@jsx.import.name", "@jsx.import.brace" }) do
-			hl(g, jsx_red)
-		end
+		-- Imported names and their { } braces are handled separately, by
+		-- diegomaajer.import-colors (extmarks), because an after/queries file
+		-- does not merge into nvim-treesitter's bundled highlights.
 	end,
 })
 
 -- fire once for the already-loaded colorscheme
 vim.cmd.doautocmd("ColorScheme")
+
+require("diegomaajer.import-colors").setup(jsx_red, jsx_import_kw)
