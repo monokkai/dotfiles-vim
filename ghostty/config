@@ -1,11 +1,11 @@
 background-opacity = 0.83
 background-blur-radius = 25
-background = #00000
+background = #000000
 
 font-family = "PlemolJP Console NF"
 command = /opt/homebrew/bin/fish
 shell-integration = fish
-font-size = 19
+font-size = 21
 
 cursor-style = block
 cursor-style-blink = true

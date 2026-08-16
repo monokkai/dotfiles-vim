@@ -42,7 +42,8 @@
       "Bash(cp /tmp/_tide_pwd_custom.fish *)",
       "Bash(/opt/homebrew/bin/fish -l -c ' *)",
       "Bash(git -C /Users/mayeregor/.config status --short -- fish/functions/_tide_pwd.fish)",
-      "Bash(nvim --headless /tmp/Header.astro '+lua *)"
+      "Bash(nvim --headless /tmp/Header.astro '+lua *)",
+      "Bash(nvim --headless /tmp/imports.tsx '+lua *)"
     ]
   }
 }

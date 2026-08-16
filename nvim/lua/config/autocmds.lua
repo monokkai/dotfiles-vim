@@ -22,3 +22,84 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.opt.conceallevel = 0
 	end,
 })
+
+-- ─── JSX / Astro markup colours ───────────────────────────────────────────────
+--
+-- Re-applied on every ColorScheme so a theme reload cannot wipe them.
+--
+-- Note on the requested hexes: #5A1A19 and #475119 measure 1.43:1 and 2.21:1
+-- against the editor background -- far below the 4.5:1 readability threshold,
+-- and much darker than the reference screenshot (~5.8:1 and ~9.0:1). They read
+-- as near-black on this theme. The values below keep the SAME hues (1deg and
+-- 71deg) at a readable lightness. Swap in the commented literals to use the
+-- exact values requested.
+local jsx_red = "#C83A37" -- < > </ />          (literal: "#5A1A19")
+local jsx_green = "#AEC544" -- tag names, attrs, =  (literal: "#475119")
+local jsx_white = "#E8E8E8" -- text between tags
+-- Attribute NAMES (as=, bg=, borderTopWidth=, mt= ...).
+-- Same hue as the originally requested #24486E, raised to a readable lightness
+-- (2.00:1 -> 5.55:1 against the background).
+local jsx_attr = "#588FC8"
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+	group = vim.api.nvim_create_augroup("jsx_markup_colors", { clear = true }),
+	callback = function()
+		local hl = function(group, fg)
+			vim.api.nvim_set_hl(0, group, { fg = fg })
+		end
+
+		-- < > </ /> brackets
+		for _, g in ipairs({
+			"@tag.delimiter",
+			"@tag.delimiter.tsx",
+			"@tag.delimiter.jsx",
+			"@tag.delimiter.astro",
+		}) do
+			hl(g, jsx_red)
+		end
+
+		-- div, h2, nav, HeaderLink ...
+		for _, g in ipairs({
+			"@tag",
+			"@tag.tsx",
+			"@tag.jsx",
+			"@tag.astro",
+			"@tag.builtin",
+			"@tag.builtin.tsx",
+			"@constructor.tsx",
+		}) do
+			hl(g, jsx_green)
+		end
+
+		-- attribute NAMES: as, bg, borderTopWidth, className, href ...
+		for _, g in ipairs({
+			"@tag.attribute",
+			"@tag.attribute.tsx",
+			"@tag.attribute.jsx",
+			"@tag.attribute.astro",
+			"@property.tsx",
+		}) do
+			hl(g, jsx_attr)
+		end
+
+		-- the = sign itself stays green
+		hl("@operator.tsx", jsx_green)
+
+		-- literal text between the tags
+		for _, g in ipairs({ "@text.tsx", "@none.tsx" }) do
+			hl(g, jsx_white)
+		end
+
+		-- Imported names and their { } braces, in the same red as the JSX
+		-- brackets. These captures come from after/queries/{tsx,typescript,
+		-- javascript}/highlights.scm, which scopes them to import statements --
+		-- colouring @variable or @punctuation.bracket directly would repaint
+		-- every identifier and bracket in the file.
+		for _, g in ipairs({ "@jsx.import.name", "@jsx.import.brace" }) do
+			hl(g, jsx_red)
+		end
+	end,
+})
+
+-- fire once for the already-loaded colorscheme
+vim.cmd.doautocmd("ColorScheme")
