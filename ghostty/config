@@ -1,6 +1,6 @@
-background-opacity = 0.85
+background-opacity = 0.83
 background-blur-radius = 25
-background = #000000
+background = #00000
 
 font-family = "PlemolJP Console NF"
 command = /opt/homebrew/bin/fish

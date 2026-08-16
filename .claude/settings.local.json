@@ -31,7 +31,18 @@
       "Bash(/opt/homebrew/bin/fish -c 'for v in tide_pwd_dir_length tide_pwd_truncate_dirs fish_prompt_pwd_dir_length tide_pwd_icon tide_pwd_icon_home; echo \"$v = $$v\"; end')",
       "Bash(/opt/homebrew/bin/fish -c 'set -U tide_pwd_dir_length 3; echo \"set to: $tide_pwd_dir_length\"')",
       "Bash(/opt/homebrew/bin/fish -c 'set -e tide_pwd_dir_length; set -e tide_pwd_max_dirs; echo cleared')",
-      "Bash(/opt/homebrew/bin/fish -c 'echo \"tide_pwd_markers = $tide_pwd_markers\"')"
+      "Bash(/opt/homebrew/bin/fish -c 'echo \"tide_pwd_markers = $tide_pwd_markers\"')",
+      "Bash(/opt/homebrew/bin/fish -c ' *)",
+      "Bash(/opt/homebrew/bin/fish -c 'cd /Users/mayeregor/.config/nvim; echo \"COLUMNS=$COLUMNS\"; fish_prompt')",
+      "Bash(/opt/homebrew/bin/fish -c 'set -eU tide_pwd_dir_length; set -eU tide_pwd_max_dirs')",
+      "Bash(/opt/homebrew/bin/fish -c 'echo \"dir_length=[$tide_pwd_dir_length] max_dirs=[$tide_pwd_max_dirs] markers=$\\(count $tide_pwd_markers\\)\"')",
+      "Bash(/opt/homebrew/bin/fish -c 'echo \"right items: $\\(count $tide_right_prompt_items\\)\"; for i in $tide_right_prompt_items; echo -n \"$i \"; end; echo')",
+      "Bash(/opt/homebrew/bin/fish -c 'echo \"bg=$tide_pwd_bg_color dirs=$tide_pwd_color_dirs anchors=$tide_pwd_color_anchors trunc=$tide_pwd_color_truncated_dirs icon=[$tide_pwd_icon] home=[$tide_pwd_icon_home]\"')",
+      "Bash(mkdir -p /tmp/pwdtest/Desktop/developement/full-stack-projects/maajer-store)",
+      "Bash(cp /tmp/_tide_pwd_custom.fish *)",
+      "Bash(/opt/homebrew/bin/fish -l -c ' *)",
+      "Bash(git -C /Users/mayeregor/.config status --short -- fish/functions/_tide_pwd.fish)",
+      "Bash(nvim --headless /tmp/Header.astro '+lua *)"
     ]
   }
 }

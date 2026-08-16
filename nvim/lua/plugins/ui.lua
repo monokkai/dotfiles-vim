@@ -95,27 +95,27 @@ return {
 				-- Bar colour is base03; the selected wedge carries the amber across
 				-- so the pill runs solid into its points.
 				fill = { fg = "#002C38", bg = "#002C38" },
-				separator_selected = { fg = "#002C38", bg = "#D4A017" },
+				separator_selected = { fg = "#002C38", bg = "#B8912A" },
 				separator_visible = { fg = "#002C38", bg = "#002C38" },
 				separator = { fg = "#002C38", bg = "#002C38" },
 				tab = { fg = "#576D74", bg = "#002C38" },
 				background = { fg = "#576D74", bg = "#002C38" },
-				tab_selected = { fg = "#000000", bg = "#D4A017", bold = true },
+				tab_selected = { fg = "#000000", bg = "#B8912A", bold = true },
 				-- the modified dot has its own group; without these it keeps the
 				-- theme bg and shows a teal patch on the amber tab
-				modified_selected = { fg = "#000000", bg = "#D4A017" },
+				modified_selected = { fg = "#000000", bg = "#B8912A" },
 				modified = { fg = "#576D74", bg = "#002C38" },
 				modified_visible = { fg = "#576D74", bg = "#002C38" },
-				buffer_selected = { fg = "#000000", bg = "#D4A017", bold = true },
-				indicator_selected = { fg = "#D4A017", bg = "#D4A017" },
-				warning_selected = { fg = "#000000", bg = "#D4A017" },
-				warning_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
-				error_selected = { fg = "#000000", bg = "#D4A017" },
-				error_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
-				info_selected = { fg = "#000000", bg = "#D4A017" },
-				info_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
-				hint_selected = { fg = "#000000", bg = "#D4A017" },
-				hint_diagnostic_selected = { fg = "#000000", bg = "#D4A017" },
+				buffer_selected = { fg = "#000000", bg = "#B8912A", bold = true },
+				indicator_selected = { fg = "#B8912A", bg = "#B8912A" },
+				warning_selected = { fg = "#000000", bg = "#B8912A" },
+				warning_diagnostic_selected = { fg = "#000000", bg = "#B8912A" },
+				error_selected = { fg = "#000000", bg = "#B8912A" },
+				error_diagnostic_selected = { fg = "#000000", bg = "#B8912A" },
+				info_selected = { fg = "#000000", bg = "#B8912A" },
+				info_diagnostic_selected = { fg = "#000000", bg = "#B8912A" },
+				hint_selected = { fg = "#000000", bg = "#B8912A" },
+				hint_diagnostic_selected = { fg = "#000000", bg = "#B8912A" },
 			},
 		},
 	},
@@ -141,12 +141,22 @@ return {
 				},
 				render = function(props)
 					local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ":t")
-					if vim.bo[props.buf].modified then
-						filename = "[+] " .. filename
+					if filename == "" then
+						filename = "[No Name]"
 					end
+					local modified = vim.bo[props.buf].modified
 
 					local icon, color = require("nvim-web-devicons").get_icon_color(filename)
-					return { { icon, guifg = color }, { " " }, { filename } }
+					local res = {
+						{ icon, guifg = color },
+						{ " " },
+						{ filename, gui = modified and "bold,italic" or "bold" },
+					}
+					-- red dot instead of a [+] prefix, matching the reference screenshot
+					if modified then
+						res[#res + 1] = { " ● ", guifg = "#FF6E6E" }
+					end
+					return res
 				end,
 			})
 		end,
