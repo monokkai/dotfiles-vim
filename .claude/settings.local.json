@@ -48,7 +48,12 @@
       "Bash(echo \"=== exit: $? ===\")",
       "Bash(/opt/homebrew/bin/fish -l -c 'for v in fish_color_command fish_color_param fish_color_normal fish_color_comment; printf \"%-26s %s\\\\n\" $v \"$$v\"; end; echo \"--- any universals left? ---\"; for v in fish_color_command fish_color_param fish_color_normal fish_color_autosuggestion fish_color_quote fish_color_error; if set -qU $v; echo \"STALE UNIVERSAL: $v\"; end; end; echo done')",
       "Bash(/opt/homebrew/bin/fish -l -c 'for v in fish_color_command fish_color_param fish_color_normal fish_color_option; printf \"%-26s [%s]\\\\n\" $v \"$$v\"; end *)",
-      "Bash(/opt/homebrew/bin/fish -l -c 'for v in fish_color_command fish_color_param fish_color_normal fish_color_option fish_color_quote; printf \"%-24s %s\\\\n\" $v \"$$v\"; end')"
+      "Bash(/opt/homebrew/bin/fish -l -c 'for v in fish_color_command fish_color_param fish_color_normal fish_color_option fish_color_quote; printf \"%-24s %s\\\\n\" $v \"$$v\"; end')",
+      "Bash(nvim --headless /tmp/missing.tsx '+lua *)",
+      "Bash(nvim --headless /tmp/apply.tsx '+lua *)",
+      "Bash(rm -f ~/Desktop/developement/full-stack-projects/maajer-store/app/zz-probe.tsx)",
+      "Bash(git -C ~/Desktop/developement/full-stack-projects/maajer-store status --short)",
+      "Bash(nvim --headless /tmp/tags.tsx '+lua *)"
     ]
   }
 }

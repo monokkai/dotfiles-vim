@@ -58,6 +58,52 @@ keymap.set("n", "<C-w><down>", "<C-w>-")
 keymap.set("n", ";q", "gcc", { desc = "Comment line", remap = true })
 keymap.set("v", ";q", "gc", { desc = "Comment selection", remap = true })
 
+-- ─── LSP actions on the ; prefix ──────────────────────────────────────────────
+-- VSCode's Cmd+. is a code action; these put it (and its neighbours) on the home
+-- row. ;f ;e ;r ;s ;c ;t ;; are already taken by telescope and ;q by comments,
+-- so these use the free keys in the qwerty/asdf zone.
+--
+--   ;w  add all missing imports -- applies immediately, no menu
+--   ;e  code action menu        -- the plain Cmd+. list at the cursor
+--   ;a  rename symbol
+--   ;g  go to definition
+--   ;v  hover docs
+--
+-- The kind really is "source.addMissingImports.ts" -- vtsls suffixes its source
+-- actions with .ts, so asking for the unsuffixed "source.addMissingImports"
+-- matches nothing and silently does nothing. Both spellings are listed so this
+-- keeps working if the server is swapped for ts_ls.
+
+keymap.set("n", ";w", function()
+	vim.lsp.buf.code_action({
+		context = {
+			only = { "source.addMissingImports.ts", "source.addMissingImports" },
+			diagnostics = {},
+		},
+		apply = true,
+	})
+end, { desc = "Add all missing imports" })
+
+keymap.set("n", ";W", function()
+	vim.lsp.buf.code_action()
+end, { desc = "Code Action (quick fix menu)" })
+
+keymap.set("v", ";W", function()
+	vim.lsp.buf.code_action()
+end, { desc = "Code Action (selection)" })
+
+keymap.set("n", ";a", function()
+	vim.lsp.buf.rename()
+end, { desc = "Rename symbol" })
+
+keymap.set("n", ";g", function()
+	vim.lsp.buf.definition()
+end, { desc = "Go to definition" })
+
+keymap.set("n", ";v", function()
+	vim.lsp.buf.hover()
+end, { desc = "Hover docs" })
+
 -- File explorer (neo-tree)
 keymap.set("n", "<leader>t", function()
 	vim.cmd("Neotree toggle")

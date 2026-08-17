@@ -46,6 +46,18 @@ local QUERY = [[
   ; `import type { Foo }` / `import { type Foo }`
   (import_statement
     "type" @keyword)
+
+  ; <Foo.Bar /> -- member-expression components only ever get @tag.builtin from
+  ; the bundled queries, so they would stay green with the rest of the built-in
+  ; html elements. Catch the object/property identifiers here instead.
+  (jsx_opening_element
+    name: (member_expression) @component)
+
+  (jsx_closing_element
+    name: (member_expression) @component)
+
+  (jsx_self_closing_element
+    name: (member_expression) @component)
 ]]
 
 local LANGS = {
@@ -92,6 +104,8 @@ function M.highlight(buf)
 			group = "JsxImportKeyword"
 		elseif capture == "name" then
 			group = "JsxImportName"
+		elseif capture == "component" then
+			group = "JsxComponentTag"
 		end
 		if not group then
 			goto continue
@@ -112,6 +126,8 @@ function M.setup(color, keyword_color)
 		vim.api.nvim_set_hl(0, "JsxImportName", { fg = color })
 		vim.api.nvim_set_hl(0, "JsxImportBrace", { fg = color })
 		vim.api.nvim_set_hl(0, "JsxImportKeyword", { fg = keyword_color })
+		-- <Foo.Bar /> components share the imported-name colour
+		vim.api.nvim_set_hl(0, "JsxComponentTag", { fg = color })
 	end
 	groups()
 

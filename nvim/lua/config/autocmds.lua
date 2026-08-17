@@ -40,10 +40,12 @@ local jsx_white = "#E8E8E8" -- text between tags
 -- Same hue as the originally requested #24486E, raised to a readable lightness
 -- (2.00:1 -> 5.55:1 against the background).
 local jsx_attr = "#588FC8"
--- `import` / `from` keywords. Requested as #7E3F2E, which measures 2.37:1
--- against the background; this is the same hue (13deg) at 5.08:1.
+-- `import` / `from` / `type` keywords. Requested as #7E3F2E, which measures
+-- 2.37:1 against the background. Same hue (13deg) at 5.16:1.
+-- Saturation is held at 0.70 while the lightness moves -- dropping lightness
+-- alone turns it muddy, raising it alone washes out to pink-beige.
 -- Swap to "#7E3F2E" for the literal value.
-local jsx_import_kw = "#C26E57"
+local jsx_import_kw = "#DC5F3C"
 
 vim.api.nvim_create_autocmd("ColorScheme", {
 	group = vim.api.nvim_create_augroup("jsx_markup_colors", { clear = true }),
@@ -62,17 +64,29 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 			hl(g, jsx_red)
 		end
 
-		-- div, h2, nav, HeaderLink ...
+		-- BUILT-IN html elements: div, h2, section, nav ... stay green.
+		-- Treesitter gives lowercase elements @tag.builtin, and capitalised
+		-- components BOTH @tag.builtin and @tag -- @tag is applied last, so
+		-- colouring it red below wins for components while these stay green.
+		for _, g in ipairs({
+			"@tag.builtin",
+			"@tag.builtin.tsx",
+			"@tag.builtin.jsx",
+			"@tag.builtin.astro",
+		}) do
+			hl(g, jsx_green)
+		end
+
+		-- IMPORTED / user components: <Text>, <Box>, <HeaderLink> ... in red
 		for _, g in ipairs({
 			"@tag",
 			"@tag.tsx",
 			"@tag.jsx",
 			"@tag.astro",
-			"@tag.builtin",
-			"@tag.builtin.tsx",
 			"@constructor.tsx",
+			"@constructor",
 		}) do
-			hl(g, jsx_green)
+			hl(g, jsx_red)
 		end
 
 		-- attribute NAMES: as, bg, borderTopWidth, className, href ...

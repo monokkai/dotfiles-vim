@@ -7,6 +7,8 @@ command = /opt/homebrew/bin/fish
 shell-integration = fish
 font-size = 21
 
+theme = Solarized Dark Patched
+
 cursor-style = block
 cursor-style-blink = true
 

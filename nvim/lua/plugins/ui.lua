@@ -104,6 +104,13 @@ return {
 				-- the modified dot has its own group; without these it keeps the
 				-- theme bg and shows a teal patch on the amber tab
 				modified_selected = { fg = "#000000", bg = "#B8912A" },
+				-- When two tabs share a filename (several page.tsx in a Next app)
+				-- bufferline prefixes the parent dir using these groups. Left at
+				-- the theme default they render grey on a transparent bg, which
+				-- shows as a grey notch across the amber pill.
+				duplicate_selected = { fg = "#000000", bg = "#B8912A", italic = true },
+				duplicate = { fg = "#576D74", bg = "#002C38", italic = true },
+				duplicate_visible = { fg = "#576D74", bg = "#002C38", italic = true },
 				modified = { fg = "#576D74", bg = "#002C38" },
 				modified_visible = { fg = "#576D74", bg = "#002C38" },
 				buffer_selected = { fg = "#000000", bg = "#B8912A", bold = true },
