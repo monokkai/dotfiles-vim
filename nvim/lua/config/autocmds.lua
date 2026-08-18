@@ -23,181 +23,80 @@ vim.api.nvim_create_autocmd("FileType", {
 	end,
 })
 
--- ─── JSX / Astro markup colours ───────────────────────────────────────────────
---
--- Re-applied on every ColorScheme so a theme reload cannot wipe them.
---
--- Note on the requested hexes: #5A1A19 and #475119 measure 1.43:1 and 2.21:1
--- against the editor background -- far below the 4.5:1 readability threshold,
--- and much darker than the reference screenshot (~5.8:1 and ~9.0:1). They read
--- as near-black on this theme. The values below keep the SAME hues (1deg and
--- 71deg) at a readable lightness. Swap in the commented literals to use the
--- exact values requested.
-local jsx_red = "#C83A37" -- < > </ />          (literal: "#5A1A19")
-local jsx_green = "#AEC544" -- tag names, attrs, =  (literal: "#475119")
-local jsx_white = "#E8E8E8" -- text between tags
--- Attribute NAMES (as=, bg=, borderTopWidth=, mt= ...).
--- Same hue as the originally requested #24486E, raised to a readable lightness
--- (2.00:1 -> 5.55:1 against the background).
-local jsx_attr = "#588FC8"
--- `import` / `from` / `type` keywords. Requested as #7E3F2E, which measures
--- 2.37:1 against the background. Same hue (13deg) at 5.16:1.
--- Saturation is held at 0.70 while the lightness moves -- dropping lightness
--- alone turns it muddy, raising it alone washes out to pink-beige.
--- Swap to "#7E3F2E" for the literal value.
-local jsx_import_kw = "#DC5F3C"
+-- Imported names, their { } braces and <Foo.Bar /> components. This is an
+-- extmark pass rather than theme highlights: those need to be scoped to import
+-- statements specifically, which a colorscheme cannot express. Colours are read
+-- from the active theme so there is nothing to keep in sync here.
+local ok, sonokai = pcall(require, "solarized-sonokai.palette")
+if ok then
+	local c = sonokai.palette
+	require("diegomaajer.import-colors").setup(c.jsx_bracket, c.jsx_keyword)
+end
 
-vim.api.nvim_create_autocmd("ColorScheme", {
-	group = vim.api.nvim_create_augroup("jsx_markup_colors", { clear = true }),
-	callback = function()
-		local hl = function(group, fg)
-			vim.api.nvim_set_hl(0, group, { fg = fg })
-		end
-
-		-- < > </ /> brackets
-		for _, g in ipairs({
-			"@tag.delimiter",
-			"@tag.delimiter.tsx",
-			"@tag.delimiter.jsx",
-			"@tag.delimiter.astro",
-		}) do
-			hl(g, jsx_red)
-		end
-
-		-- BUILT-IN html elements: div, h2, section, nav ... stay green.
-		-- Treesitter gives lowercase elements @tag.builtin, and capitalised
-		-- components BOTH @tag.builtin and @tag -- @tag is applied last, so
-		-- colouring it red below wins for components while these stay green.
-		for _, g in ipairs({
-			"@tag.builtin",
-			"@tag.builtin.tsx",
-			"@tag.builtin.jsx",
-			"@tag.builtin.astro",
-		}) do
-			hl(g, jsx_green)
-		end
-
-		-- IMPORTED / user components: <Text>, <Box>, <HeaderLink> ... in red
-		for _, g in ipairs({
-			"@tag",
-			"@tag.tsx",
-			"@tag.jsx",
-			"@tag.astro",
-			"@constructor.tsx",
-			"@constructor",
-		}) do
-			hl(g, jsx_red)
-		end
-
-		-- attribute NAMES: as, bg, borderTopWidth, className, href ...
-		for _, g in ipairs({
-			"@tag.attribute",
-			"@tag.attribute.tsx",
-			"@tag.attribute.jsx",
-			"@tag.attribute.astro",
-			"@property.tsx",
-		}) do
-			hl(g, jsx_attr)
-		end
-
-		-- the = sign itself stays green
-		hl("@operator.tsx", jsx_green)
-
-		-- literal text between the tags
-		for _, g in ipairs({ "@text.tsx", "@none.tsx" }) do
-			hl(g, jsx_white)
-		end
-
-		-- Imported names and their { } braces are handled separately, by
-		-- diegomaajer.import-colors (extmarks), because an after/queries file
-		-- does not merge into nvim-treesitter's bundled highlights.
-
-	end,
-})
-
--- ── Transparent floats and side panels ───────────────────────────────────────
--- The theme's `transparent = true` only clears Normal/NormalNC; every float,
--- telescope window and neo-tree panel keeps an opaque #001419, which reads as a
--- solid blue-teal slab over the terminal.
---
--- This cannot live in the ColorScheme autocmd alone: telescope and neo-tree are
--- lazy-loaded and define their own highlight groups *after* ColorScheme has
--- fired, overwriting anything cleared earlier. So it also runs on FileType and
--- on lazy.nvim's LazyLoad event.
-local function clear_float_backgrounds()
-	local groups = {
-		-- generic floats / popups
-		"NormalFloat",
-		"FloatBorder",
-		"FloatTitle",
-		"Pmenu",
-		"PmenuSbar",
-		"WinSeparator",
-		"SignColumn",
-		"EndOfBuffer",
-		-- telescope (;f, ;r, the file browser ...)
-		"TelescopeNormal",
-		"TelescopeBorder",
-		"TelescopeTitle",
-		"TelescopePromptNormal",
-		"TelescopePromptBorder",
-		"TelescopePromptTitle",
-		"TelescopeResultsNormal",
-		"TelescopeResultsBorder",
-		"TelescopeResultsTitle",
-		"TelescopePreviewNormal",
-		"TelescopePreviewBorder",
-		"TelescopePreviewTitle",
-		-- neo-tree (<leader>t)
-		"NeoTreeNormal",
-		"NeoTreeNormalNC",
-		"NeoTreeFloatNormal",
-		"NeoTreeFloatBorder",
-		"NeoTreeWinSeparator",
-		"NeoTreeEndOfBuffer",
-		"NeoTreeTitleBar",
-		-- which-key, lazy, mason
-		"WhichKeyFloat",
-		"WhichKeyBorder",
-		"LazyNormal",
-		"MasonNormal",
-		"NoicePopup",
-		"NoiceCmdlinePopup",
-	}
-	for _, g in ipairs(groups) do
+-- ── Transparent tab bar ──────────────────────────────────────────────────────
+-- bufferline resolves its own highlight groups from the colorscheme after the
+-- ColorScheme event, and it treats a bg of "NONE" in its opts table as a colour
+-- name to look up rather than "no background" -- so BufferLineFill and
+-- BufferLineBackground come back opaque no matter what the spec says. Clearing
+-- them directly afterwards is what actually sticks.
+local function clear_tabline_bg()
+	for _, g in ipairs({
+		"BufferLineFill",
+		"BufferLineBackground",
+		"BufferLineTab",
+		"BufferLineTabClose",
+		-- NB: the *Selected groups are deliberately absent -- those carry the
+		-- amber fill of the active tab and must stay opaque.
+		-- The Separator groups are handled below, not here: a slant separator
+		-- is a filled glyph whose fg paints the wedge, so clearing fg to NONE
+		-- makes it fall back to black instead of disappearing.
+		"BufferLineDuplicate",
+		"BufferLineDuplicateVisible",
+		"BufferLineModified",
+		"BufferLineModifiedVisible",
+		"TabLine",
+		"TabLineFill",
+	}) do
 		local cur = vim.api.nvim_get_hl(0, { name = g, link = false })
 		vim.api.nvim_set_hl(0, g, {
 			fg = cur.fg,
-			sp = cur.sp,
 			bg = "NONE",
 			bold = cur.bold,
 			italic = cur.italic,
-			underline = cur.underline,
-			reverse = cur.reverse,
 		})
 	end
+
+	-- Slant separators: fg paints the wedge body, bg the half facing the next
+	-- tab. On a transparent bar both must be NONE *together* -- setting only bg
+	-- leaves fg falling back to black, which shows as a dark triangle between
+	-- tabs. The selected one keeps the amber so the active pill stays solid.
+	-- Slant separators are filled glyphs: fg paints the half facing the tab,
+	-- bg the half facing the bar. Neither half may be NONE -- NONE means
+	-- "inherit", and with a transparent bar it resolves to white, which is the
+	-- pale triangle flanking each tab. Both halves are named explicitly, using
+	-- the terminal's own background (#000000) for the outer half so the wedge
+	-- disappears into the bar and only the slant edge is visible.
+	local term_bg = "#000000"
+	-- fill's fg is used for the bar's own slant edges, so it needs the same
+	-- treatment -- left at NONE it renders the same white wedge.
+	vim.api.nvim_set_hl(0, "BufferLineFill", { fg = term_bg, bg = term_bg })
+	vim.api.nvim_set_hl(0, "BufferLineSeparator", { fg = term_bg, bg = term_bg })
+	vim.api.nvim_set_hl(0, "BufferLineSeparatorVisible", { fg = term_bg, bg = term_bg })
+	vim.api.nvim_set_hl(0, "BufferLineSeparatorSelected", { fg = term_bg, bg = "#B8912A" })
+	vim.api.nvim_set_hl(0, "BufferLineOffsetSeparator", { fg = term_bg, bg = term_bg })
 end
 
-vim.api.nvim_create_autocmd({ "ColorScheme", "FileType", "BufWinEnter" }, {
-	group = vim.api.nvim_create_augroup("transparent_floats", { clear = true }),
+vim.api.nvim_create_autocmd({ "ColorScheme", "BufWinEnter", "VimEnter" }, {
+	group = vim.api.nvim_create_augroup("transparent_tabline", { clear = true }),
 	callback = function()
-		vim.schedule(clear_float_backgrounds)
+		vim.schedule(clear_tabline_bg)
 	end,
 })
 
--- lazy.nvim fires this after a plugin is loaded, which is when telescope and
--- neo-tree install their own highlight groups.
 vim.api.nvim_create_autocmd("User", {
 	pattern = "LazyLoad",
-	group = "transparent_floats",
+	group = "transparent_tabline",
 	callback = function()
-		vim.schedule(clear_float_backgrounds)
+		vim.schedule(clear_tabline_bg)
 	end,
 })
-
-clear_float_backgrounds()
-
--- fire once for the already-loaded colorscheme
-vim.cmd.doautocmd("ColorScheme")
-
-require("diegomaajer.import-colors").setup(jsx_red, jsx_import_kw)

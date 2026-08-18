@@ -18,7 +18,7 @@ require("lazy").setup({
 			"LazyVim/LazyVim",
 			import = "lazyvim.plugins",
 			opts = {
-				colorscheme = "solarized-osaka",
+				colorscheme = "solarized-sonokai",
 				news = {
 					lazyvim = true,
 					neovim = true,
@@ -35,6 +35,12 @@ require("lazy").setup({
 		{ import = "lazyvim.plugins.extras.lang.go" },
 		{ import = "lazyvim.plugins.extras.lang.java" },
 		{ import = "lazyvim.plugins.extras.lang.tailwind" },
+		{ import = "lazyvim.plugins.extras.lang.astro" },
+		{ import = "lazyvim.plugins.extras.lang.svelte" },
+		{ import = "lazyvim.plugins.extras.lang.vue" },
+		{ import = "lazyvim.plugins.extras.lang.kotlin" },
+		-- swift, graphql and protobuf have no LazyVim extra; their servers and
+		-- parsers are wired up manually in plugins/lang-extra.lua
 		-- { import = "lazyvim.plugins.extras.dap.core" },
 		-- { import = "lazyvim.plugins.extras.vscode" },
 		{ import = "lazyvim.plugins.extras.util.mini-hipatterns" },

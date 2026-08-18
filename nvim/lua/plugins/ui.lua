@@ -94,12 +94,12 @@ return {
 				-- fg = "NONE" inherits base01 and gives a two-tone wedge.
 				-- Bar colour is base03; the selected wedge carries the amber across
 				-- so the pill runs solid into its points.
-				fill = { fg = "#002C38", bg = "#002C38" },
-				separator_selected = { fg = "#002C38", bg = "#B8912A" },
-				separator_visible = { fg = "#002C38", bg = "#002C38" },
-				separator = { fg = "#002C38", bg = "#002C38" },
-				tab = { fg = "#576D74", bg = "#002C38" },
-				background = { fg = "#576D74", bg = "#002C38" },
+				fill = { fg = "NONE", bg = "NONE" },
+				separator_selected = { fg = "NONE", bg = "#B8912A" },
+				separator_visible = { fg = "NONE", bg = "NONE" },
+				separator = { fg = "NONE", bg = "NONE" },
+				tab = { fg = "#576D74", bg = "NONE" },
+				background = { fg = "#576D74", bg = "NONE" },
 				tab_selected = { fg = "#000000", bg = "#B8912A", bold = true },
 				-- the modified dot has its own group; without these it keeps the
 				-- theme bg and shows a teal patch on the amber tab
@@ -109,10 +109,10 @@ return {
 				-- the theme default they render grey on a transparent bg, which
 				-- shows as a grey notch across the amber pill.
 				duplicate_selected = { fg = "#000000", bg = "#B8912A", italic = true },
-				duplicate = { fg = "#576D74", bg = "#002C38", italic = true },
-				duplicate_visible = { fg = "#576D74", bg = "#002C38", italic = true },
-				modified = { fg = "#576D74", bg = "#002C38" },
-				modified_visible = { fg = "#576D74", bg = "#002C38" },
+				duplicate = { fg = "#576D74", bg = "NONE", italic = true },
+				duplicate_visible = { fg = "#576D74", bg = "NONE", italic = true },
+				modified = { fg = "#576D74", bg = "NONE" },
+				modified_visible = { fg = "#576D74", bg = "NONE" },
 				buffer_selected = { fg = "#000000", bg = "#B8912A", bold = true },
 				indicator_selected = { fg = "#B8912A", bg = "#B8912A" },
 				warning_selected = { fg = "#000000", bg = "#B8912A" },
@@ -174,6 +174,72 @@ return {
 		"nvim-lualine/lualine.nvim",
 		opts = function(_, opts)
 			local LazyVim = require("lazyvim.util")
+			local icons = LazyVim.config.icons
+
+			-- Theme ships with the colorscheme (lua/lualine/themes/), so the bar
+			-- tracks the palette instead of duplicating hexes here.
+			opts.options = opts.options or {}
+			opts.options.theme = "solarized-sonokai"
+			opts.options.globalstatus = true
+			-- Powerline: solid  between sections, thin  between the
+			-- components inside one. The caps are global here rather than on
+			-- individual components -- that is what makes each section a filled
+			-- wedge instead of a rounded pill.
+			opts.options.section_separators = { left = "", right = "" }
+			opts.options.component_separators = { left = "", right = "" }
+
+			opts.sections.lualine_a = {
+				{ "mode" },
+			}
+
+			opts.sections.lualine_b = {
+				{ "branch", icon = "" },
+				{
+					"diff",
+					symbols = {
+						added = icons.git.added,
+						modified = icons.git.modified,
+						removed = icons.git.removed,
+					},
+				},
+				{
+					"diagnostics",
+					symbols = {
+						error = icons.diagnostics.Error,
+						warn = icons.diagnostics.Warn,
+						info = icons.diagnostics.Info,
+						hint = icons.diagnostics.Hint,
+					},
+				},
+			}
+
+			opts.sections.lualine_x = {
+				-- active LSP servers for this buffer
+				{
+					function()
+						local names = {}
+						for _, client in pairs(vim.lsp.get_clients({ bufnr = 0 })) do
+							names[#names + 1] = client.name
+						end
+						if #names == 0 then
+							return ""
+						end
+						return "  " .. table.concat(names, " ")
+					end,
+					color = { fg = "#7f8490" },
+				},
+				{ "encoding" },
+				{ "fileformat", symbols = { unix = "", dos = "", mac = "" } },
+				{ "filetype" },
+			}
+
+			opts.sections.lualine_y = {
+				{ "progress" },
+			}
+			opts.sections.lualine_z = {
+				{ "location" },
+			}
+
 			opts.sections.lualine_c[4] = {
 				LazyVim.lualine.pretty_path({
 					length = 0,

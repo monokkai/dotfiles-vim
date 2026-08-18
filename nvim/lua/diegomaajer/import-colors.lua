@@ -47,6 +47,15 @@ local QUERY = [[
   (import_statement
     "type" @keyword)
 
+  ; `default` in `export default ...` is plain @keyword -- the same capture as
+  ; if/return/const -- so it cannot be recoloured through the theme without
+  ; repainting every keyword. Scope it to export statements here instead.
+  (export_statement
+    "default" @keyword)
+
+  (export_statement
+    "export" @keyword)
+
   ; <Foo.Bar /> -- member-expression components only ever get @tag.builtin from
   ; the bundled queries, so they would stay green with the rest of the built-in
   ; html elements. Catch the object/property identifiers here instead.
