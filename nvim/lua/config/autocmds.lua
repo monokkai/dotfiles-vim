@@ -111,8 +111,91 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 		-- Imported names and their { } braces are handled separately, by
 		-- diegomaajer.import-colors (extmarks), because an after/queries file
 		-- does not merge into nvim-treesitter's bundled highlights.
+
 	end,
 })
+
+-- ── Transparent floats and side panels ───────────────────────────────────────
+-- The theme's `transparent = true` only clears Normal/NormalNC; every float,
+-- telescope window and neo-tree panel keeps an opaque #001419, which reads as a
+-- solid blue-teal slab over the terminal.
+--
+-- This cannot live in the ColorScheme autocmd alone: telescope and neo-tree are
+-- lazy-loaded and define their own highlight groups *after* ColorScheme has
+-- fired, overwriting anything cleared earlier. So it also runs on FileType and
+-- on lazy.nvim's LazyLoad event.
+local function clear_float_backgrounds()
+	local groups = {
+		-- generic floats / popups
+		"NormalFloat",
+		"FloatBorder",
+		"FloatTitle",
+		"Pmenu",
+		"PmenuSbar",
+		"WinSeparator",
+		"SignColumn",
+		"EndOfBuffer",
+		-- telescope (;f, ;r, the file browser ...)
+		"TelescopeNormal",
+		"TelescopeBorder",
+		"TelescopeTitle",
+		"TelescopePromptNormal",
+		"TelescopePromptBorder",
+		"TelescopePromptTitle",
+		"TelescopeResultsNormal",
+		"TelescopeResultsBorder",
+		"TelescopeResultsTitle",
+		"TelescopePreviewNormal",
+		"TelescopePreviewBorder",
+		"TelescopePreviewTitle",
+		-- neo-tree (<leader>t)
+		"NeoTreeNormal",
+		"NeoTreeNormalNC",
+		"NeoTreeFloatNormal",
+		"NeoTreeFloatBorder",
+		"NeoTreeWinSeparator",
+		"NeoTreeEndOfBuffer",
+		"NeoTreeTitleBar",
+		-- which-key, lazy, mason
+		"WhichKeyFloat",
+		"WhichKeyBorder",
+		"LazyNormal",
+		"MasonNormal",
+		"NoicePopup",
+		"NoiceCmdlinePopup",
+	}
+	for _, g in ipairs(groups) do
+		local cur = vim.api.nvim_get_hl(0, { name = g, link = false })
+		vim.api.nvim_set_hl(0, g, {
+			fg = cur.fg,
+			sp = cur.sp,
+			bg = "NONE",
+			bold = cur.bold,
+			italic = cur.italic,
+			underline = cur.underline,
+			reverse = cur.reverse,
+		})
+	end
+end
+
+vim.api.nvim_create_autocmd({ "ColorScheme", "FileType", "BufWinEnter" }, {
+	group = vim.api.nvim_create_augroup("transparent_floats", { clear = true }),
+	callback = function()
+		vim.schedule(clear_float_backgrounds)
+	end,
+})
+
+-- lazy.nvim fires this after a plugin is loaded, which is when telescope and
+-- neo-tree install their own highlight groups.
+vim.api.nvim_create_autocmd("User", {
+	pattern = "LazyLoad",
+	group = "transparent_floats",
+	callback = function()
+		vim.schedule(clear_float_backgrounds)
+	end,
+})
+
+clear_float_backgrounds()
 
 -- fire once for the already-loaded colorscheme
 vim.cmd.doautocmd("ColorScheme")

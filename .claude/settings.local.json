@@ -53,7 +53,9 @@
       "Bash(nvim --headless /tmp/apply.tsx '+lua *)",
       "Bash(rm -f ~/Desktop/developement/full-stack-projects/maajer-store/app/zz-probe.tsx)",
       "Bash(git -C ~/Desktop/developement/full-stack-projects/maajer-store status --short)",
-      "Bash(nvim --headless /tmp/tags.tsx '+lua *)"
+      "Bash(nvim --headless /tmp/tags.tsx '+lua *)",
+      "Bash(nvim --headless '+Neotree show' '+lua *)",
+      "Bash(nvim --headless \"+lua print\\('syntax: '..\\(loadfile\\('/Users/mayeregor/.config/nvim/lua/config/autocmds.lua'\\) and 'OK' or 'ERROR'\\)\\)\" +qa)"
     ]
   }
 }
