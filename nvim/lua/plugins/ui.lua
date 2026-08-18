@@ -181,15 +181,15 @@ return {
 			opts.options = opts.options or {}
 			opts.options.theme = "solarized-sonokai"
 			opts.options.globalstatus = true
-			-- Powerline: solid  between sections, thin  between the
-			-- components inside one. The caps are global here rather than on
-			-- individual components -- that is what makes each section a filled
-			-- wedge instead of a rounded pill.
+			-- Bubbles (lualine examples/bubbles.lua): the round caps live on the
+			-- first and last COMPONENTS, not on the global separators. The
+			-- globals stay blank -- setting arrows there too would draw a wedge
+			-- inside every section instead of one pill at each end.
 			opts.options.section_separators = { left = "", right = "" }
-			opts.options.component_separators = { left = "", right = "" }
+			opts.options.component_separators = ""
 
 			opts.sections.lualine_a = {
-				{ "mode" },
+				{ "mode", separator = { left = "" }, right_padding = 2 },
 			}
 
 			opts.sections.lualine_b = {
@@ -237,7 +237,7 @@ return {
 				{ "progress" },
 			}
 			opts.sections.lualine_z = {
-				{ "location" },
+				{ "location", separator = { right = "" }, left_padding = 2 },
 			}
 
 			opts.sections.lualine_c[4] = {
